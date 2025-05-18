@@ -6,20 +6,22 @@
   <title>Catalogue de Véhicules</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-zinc-900 text-white">
-  <div class="container mx-auto p-4">
-    <h1 class="text-4xl font-bold mb-6 text-center text-violet-400">Catalogue de Véhicules</h1>
+<body class="bg-zinc-900 text-white font-sans">
+  <div class="container mx-auto p-6">
+    <h1 class="text-4xl font-bold mb-8 text-center text-violet-400">Catalogue de Véhicules</h1>
 
-    <div class="flex flex-wrap justify-center gap-4 mb-6">
-      <button class="filter-btn px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded" data-category="all">Tout</button>
-      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-700 rounded" data-category="utilitaire">Utilitaire</button>
-      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-700 rounded" data-category="ordinaire">Ordinaire</button>
-      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-700 rounded" data-category="electrique">Électrique</button>
-      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-700 rounded" data-category="suv">SUV</button>
-      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-700 rounded" data-category="sport">Sport</button>
+    <!-- Filtres -->
+    <div class="flex flex-wrap justify-center gap-3 mb-6">
+      <button class="filter-btn px-4 py-2 bg-violet-600 text-white rounded" data-category="all">Tout</button>
+      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="utilitaire">Utilitaire</button>
+      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="ordinaire">Ordinaire</button>
+      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="electrique">Électrique</button>
+      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="suv">SUV</button>
+      <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="sport">Sport</button>
     </div>
 
-    <div class="flex gap-4 mb-6 justify-center">
+    <!-- Tri -->
+    <div class="flex justify-center mb-6">
       <select id="sort-select" class="p-2 bg-zinc-800 text-white border border-zinc-600 rounded">
         <option value="default">Trier par...</option>
         <option value="price-asc">Prix croissant</option>
@@ -29,7 +31,8 @@
       </select>
     </div>
 
-    <div id="vehicle-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    <!-- Liste -->
+    <div id="vehicle-list" class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </div>
 
   <script>
@@ -54,13 +57,16 @@
     ];
 
     const listEl = document.getElementById("vehicle-list");
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const sortSelect = document.getElementById("sort-select");
+    let currentFilter = "all";
 
-    function renderList(filter = "all") {
-      const sort = document.getElementById("sort-select").value;
+    function renderList() {
       let filtered = [...vehicles];
+      const sort = sortSelect.value;
 
-      if (filter !== "all") {
-        filtered = filtered.filter(v => v.category === filter);
+      if (currentFilter !== "all") {
+        filtered = filtered.filter(v => v.category === currentFilter);
       }
 
       if (sort === "price-asc") filtered.sort((a, b) => a.price - b.price);
@@ -68,31 +74,32 @@
       if (sort === "speed-asc") filtered.sort((a, b) => a.speed - b.speed);
       if (sort === "speed-desc") filtered.sort((a, b) => b.speed - a.speed);
 
-      listEl.innerHTML = filtered.map(vehicle => `
+      listEl.innerHTML = filtered.map(v => `
         <div class="bg-zinc-800 rounded-lg shadow p-4 flex gap-4">
-          <img src="${vehicle.image}" alt="${vehicle.model}" class="w-32 h-32 object-cover rounded">
+          <img src="${v.image}" alt="Image de ${v.model}" class="w-32 h-32 object-cover rounded">
           <div>
-            <h2 class="text-xl font-bold text-violet-300">${vehicle.model}</h2>
-            <p class="text-lg text-violet-100">💶 ${vehicle.price.toLocaleString()} €</p>
-            <p>🚗 Vitesse max : ${vehicle.speed} km/h</p>
-            <p>⏱️ 0-100 : ${vehicle.acceleration} s</p>
-            <!-- <button class="mt-2 bg-green-600 text-white px-4 py-1 rounded" onclick="openPopup('${vehicle.model}')">Commander</button> -->
+            <h2 class="text-xl font-bold text-violet-300">${v.model}</h2>
+            <p class="text-lg text-violet-100">💶 ${v.price.toLocaleString()} €</p>
+            <p>🚗 Vitesse max : ${v.speed} km/h</p>
+            <p>⏱️ 0-100 : ${v.acceleration} s</p>
           </div>
-        </div>`
-      ).join("");
+        </div>
+      `).join("");
     }
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('bg-violet-600', 'text-white'));
-        btn.classList.add('bg-violet-600', 'text-white');
-        renderList(btn.dataset.category);
+    filterBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach(b => b.classList.remove("bg-violet-600", "text-white"));
+        btn.classList.add("bg-violet-600", "text-white");
+        currentFilter = btn.dataset.category;
+        renderList();
       });
     });
 
-    document.getElementById("sort-select").addEventListener("change", () => renderList());
+    sortSelect.addEventListener("change", renderList);
 
     renderList();
   </script>
 </body>
 </html>
+
