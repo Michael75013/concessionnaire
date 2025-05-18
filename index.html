@@ -1,168 +1,137 @@
 <!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Catalogue de Véhicules</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-zinc-900 text-white font-sans">
-    <div class="container mx-auto p-6">
-      <div id="auth-section" class="mb-6"></div>
-
-      <h1 class="text-4xl font-bold mb-8 text-center text-violet-400">Catalogue de Véhicules</h1>
-
-      <!-- Filtres -->
-      <div class="flex flex-wrap justify-center gap-3 mb-6">
-        <button class="filter-btn px-4 py-2 bg-violet-600 text-white rounded" data-category="all">Tout</button>
-        <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="utilitaire">Utilitaire</button>
-        <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="ordinaire">Ordinaire</button>
-        <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="electrique">Électrique</button>
-        <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="suv">SUV</button>
-        <button class="filter-btn px-4 py-2 bg-zinc-700 hover:bg-violet-600 rounded" data-category="sport">Sport</button>
-      </div>
-
-      <!-- Tri -->
-      <div class="flex justify-center mb-6">
-        <select id="sort-select" class="p-2 bg-zinc-800 text-white border border-zinc-600 rounded">
-          <option value="default">Trier par...</option>
-          <option value="price-asc">Prix croissant</option>
-          <option value="price-desc">Prix décroissant</option>
-          <option value="speed-asc">Vitesse croissante</option>
-          <option value="speed-desc">Vitesse décroissante</option>
-        </select>
-      </div>
-
-      <!-- Liste -->
-      <div id="vehicle-list" class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalogue de Véhicules</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background: linear-gradient(to right, #1e1b4b, #0f172a);
+      transition: background 0.5s ease;
+    }
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    }
+    .fade-in {
+      animation: fadeInUp 0.5s ease;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="text-white font-sans transition duration-300">
+  <div class="container mx-auto px-6 py-10">
+    <div class="flex justify-center mb-10">
+      <h1 class="text-5xl font-extrabold text-violet-400 drop-shadow-lg text-center">🚗 Catalogue de Véhicules 🚙</h1>
     </div>
 
-    <!-- POPUP COMMANDE -->
-    <div id="order-popup" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div class="bg-white p-6 rounded-lg text-black w-[300px]">
-        <h2 class="text-xl font-bold mb-4">Choisir une couleur</h2>
-        <div class="flex gap-3 mb-4">
-          <div class="w-6 h-6 rounded-full bg-red-600 cursor-pointer" data-color="Rouge"></div>
-          <div class="w-6 h-6 rounded-full bg-blue-600 cursor-pointer" data-color="Bleu"></div>
-          <div class="w-6 h-6 rounded-full bg-black cursor-pointer" data-color="Noir"></div>
-        </div>
-        <button id="confirm-order" class="bg-violet-600 text-white px-4 py-2 rounded">Confirmer</button>
-      </div>
+    <!-- Filtres -->
+    <div class="flex flex-wrap justify-center gap-4 mb-8">
+      <button class="filter-btn px-5 py-2 bg-violet-600 hover:bg-violet-700 transition text-white font-medium rounded-full shadow" data-category="all">Tout</button>
+      <button class="filter-btn px-5 py-2 bg-zinc-700 hover:bg-violet-600 transition rounded-full shadow" data-category="utilitaire">Utilitaire</button>
+      <button class="filter-btn px-5 py-2 bg-zinc-700 hover:bg-violet-600 transition rounded-full shadow" data-category="ordinaire">Ordinaire</button>
+      <button class="filter-btn px-5 py-2 bg-zinc-700 hover:bg-violet-600 transition rounded-full shadow" data-category="electrique">Électrique</button>
+      <button class="filter-btn px-5 py-2 bg-zinc-700 hover:bg-violet-600 transition rounded-full shadow" data-category="suv">SUV</button>
+      <button class="filter-btn px-5 py-2 bg-zinc-700 hover:bg-violet-600 transition rounded-full shadow" data-category="sport">Sport</button>
     </div>
 
-    <script>
-      const vehicles = [...]; // Utilise tes données précédentes ici
+    <!-- Tri -->
+    <div class="flex justify-center mb-10">
+      <select id="sort-select" class="p-3 bg-zinc-800 text-white border border-violet-500 rounded-full shadow">
+        <option value="default">🔽 Trier par...</option>
+        <option value="price-asc">💰 Prix croissant</option>
+        <option value="price-desc">💸 Prix décroissant</option>
+        <option value="speed-asc">🐢 Vitesse croissante</option>
+        <option value="speed-desc">🚀 Vitesse décroissante</option>
+      </select>
+    </div>
 
-      const authSection = document.getElementById("auth-section");
-      const listEl = document.getElementById("vehicle-list");
-      const filterBtns = document.querySelectorAll(".filter-btn");
-      const sortSelect = document.getElementById("sort-select");
-      const popup = document.getElementById("order-popup");
-      let currentFilter = "all";
-      let currentUser = JSON.parse(localStorage.getItem("user")) || null;
-      let selectedColor = null;
-      let selectedVehicle = null;
+    <!-- Liste -->
+    <div id="vehicle-list" class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+  </div>
 
-      function showLogin() {
-        authSection.innerHTML = `
-          <div class="bg-zinc-800 p-4 rounded mb-4 max-w-md mx-auto">
-            <h2 class="text-xl font-bold mb-2">Connexion</h2>
-            <input type="text" id="username" placeholder="Nom d'utilisateur" class="w-full p-2 mb-2 rounded bg-zinc-700 text-white" />
-            <input type="password" id="password" placeholder="Mot de passe" class="w-full p-2 mb-2 rounded bg-zinc-700 text-white" />
-            <select id="role" class="w-full p-2 mb-2 rounded bg-zinc-700 text-white">
-              <option value="client">Client</option>
-              <option value="concess">Membre concess</option>
-            </select>
-            <input type="text" id="code" placeholder="Code concess (si concess)" class="w-full p-2 mb-2 rounded bg-zinc-700 text-white" />
-            <button onclick="register()" class="bg-violet-600 w-full p-2 rounded text-white">Créer un compte</button>
-          </div>
-        `;
+  <script>
+    const vehicles = [
+      { model: "Leaf Golster 1991", category: "utilitaire", price: 34000, speed: 120, acceleration: 18, image: "https://i.imgur.com/h365uKC.png" },
+      { model: "Renaud Master", category: "utilitaire", price: 45500, speed: 170, acceleration: 12, image: "https://i.imgur.com/fpNomnx.png" },
+      { model: "206", category: "ordinaire", price: 13500, speed: 155, acceleration: 7.80, image: "https://i.imgur.com/hNZzDB5.png" },
+      { model: "C4 Grand Picasso", category: "ordinaire", price: 16000, speed: 160, acceleration: 11, image: "https://i.imgur.com/aBchCpB.png" },
+      { model: "Renaud Express", category: "ordinaire", price: 8000, speed: 100, acceleration: 16.30, image: "https://i.imgur.com/jpRn8wB.jpeg" },
+      { model: "Berlingo", category: "ordinaire", price: 22000, speed: 130, acceleration: 9.5, image: "https://i.imgur.com/wpcgVJh.png" },
+      { model: "Premier", category: "ordinaire", price: 30000, speed: 170, acceleration: 13.75, image: "https://i.imgur.com/QAAvzxG.png" },
+      { model: "Megane IV", category: "ordinaire", price: 43000, speed: 170, acceleration: 8, image: "https://i.imgur.com/sA7sBrZ.png" },
+      { model: "5008", category: "ordinaire", price: 50000, speed: 190, acceleration: 9.2, image: "https://i.imgur.com/lYcYjw9.png" },
+      { model: "Charger 1970", category: "ordinaire", price: 80000, speed: 195, acceleration: 8, image: "https://i.imgur.com/I9LknR4.png" },
+      { model: "Olympia A7", category: "ordinaire", price: 120000, speed: 230, acceleration: 6, image: "https://i.imgur.com/iFEgIeX.jpeg" },
+      { model: "V Model S", category: "electrique", price: 160000, speed: 270, acceleration: 4.0, image: "https://i.imgur.com/uorQspY.jpeg" },
+      { model: "Korn Ranger 2021", category: "suv", price: 50000, speed: 190, acceleration: 10, image: "https://i.imgur.com/Kc4e8z7.jpeg" },
+      { model: "Range River", category: "suv", price: 55000, speed: 190, acceleration: 11.5, image: "https://i.imgur.com/lc5zTOz.jpeg" },
+      { model: "Stellar Coupé", category: "suv", price: 165000, speed: 240, acceleration: 6, image: "https://i.imgur.com/emrXOK7.jpeg" },
+      { model: "RX7", category: "sport", price: 200000, speed: 240, acceleration: 5.5, image: "https://i.imgur.com/NLsARd1.png" },
+      { model: "Stellar 911 RS", category: "sport", price: 500000, speed: 320, acceleration: 5, image: "https://i.imgur.com/rcqzpSF.png" }
+    ];
+
+    const listEl = document.getElementById("vehicle-list");
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const sortSelect = document.getElementById("sort-select");
+    let currentFilter = "all";
+
+    function renderList() {
+      let filtered = [...vehicles];
+      const sort = sortSelect.value;
+
+      if (currentFilter !== "all") {
+        filtered = filtered.filter(v => v.category === currentFilter);
       }
 
-      function register() {
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-        const role = document.getElementById("role").value;
-        const code = document.getElementById("code").value;
-        if (role === "concess" && code !== "CONCESS2025") return alert("Code incorrect !");
-        const user = { username, role };
-        localStorage.setItem("user", JSON.stringify(user));
-        currentUser = user;
-        renderAuth();
-      }
+      if (sort === "price-asc") filtered.sort((a, b) => a.price - b.price);
+      if (sort === "price-desc") filtered.sort((a, b) => b.price - a.price);
+      if (sort === "speed-asc") filtered.sort((a, b) => a.speed - b.speed);
+      if (sort === "speed-desc") filtered.sort((a, b) => b.speed - a.speed);
 
-      function renderAuth() {
-        if (!currentUser) return showLogin();
-        authSection.innerHTML = `<div class="text-right mb-4">Connecté en tant que <strong>${currentUser.username}</strong> (${currentUser.role}) <button onclick="logout()" class="text-violet-400 underline">Déconnexion</button></div>`;
-      }
-
-      function logout() {
-        localStorage.removeItem("user");
-        currentUser = null;
-        showLogin();
-      }
-
-      function renderList() {
-        let filtered = [...vehicles];
-        const sort = sortSelect.value;
-        if (currentFilter !== "all") filtered = filtered.filter(v => v.category === currentFilter);
-        if (sort === "price-asc") filtered.sort((a, b) => a.price - b.price);
-        if (sort === "price-desc") filtered.sort((a, b) => b.price - a.price);
-        if (sort === "speed-asc") filtered.sort((a, b) => a.speed - b.speed);
-        if (sort === "speed-desc") filtered.sort((a, b) => b.speed - a.speed);
-
-        listEl.innerHTML = filtered.map(v => `
-          <div class="bg-zinc-800 rounded-lg shadow p-4 flex gap-4">
-            <img src="${v.image}" alt="${v.model}" class="w-32 h-32 object-cover rounded" />
+      listEl.innerHTML = filtered.map(v => `
+        <div class="bg-zinc-800 rounded-xl shadow-xl p-5 flex gap-4 card-hover fade-in">
+          <img src="${v.image}" alt="${v.model}" class="w-36 h-36 object-cover rounded-xl border border-violet-500">
+          <div class="flex flex-col justify-between">
             <div>
-              <h2 class="text-xl font-bold text-violet-300">${v.model}</h2>
-              <p class="text-lg">💶 ${v.price.toLocaleString()} €</p>
-              <p>🚗 Vitesse max : ${v.speed} km/h</p>
+              <h2 class="text-2xl font-bold text-violet-300 mb-1">${v.model}</h2>
+              <p class="text-lg text-violet-100 mb-1">💶 ${v.price.toLocaleString()} €</p>
+              <p class="mb-1">🚗 Vitesse max : ${v.speed} km/h</p>
               <p>⏱️ 0-100 : ${v.acceleration} s</p>
-              ${currentUser && currentUser.role === 'client' ? `<button class="mt-2 bg-violet-600 text-white px-3 py-1 rounded" onclick='openPopup(${JSON.stringify(v)})'>Commander</button>` : ''}
             </div>
           </div>
-        `).join("");
-      }
+        </div>
+      `).join("");
+    }
 
-      function openPopup(vehicle) {
-        selectedVehicle = vehicle;
-        selectedColor = null;
-        popup.classList.remove("hidden");
-        document.querySelectorAll("#order-popup [data-color]").forEach(el => {
-          el.addEventListener("click", () => {
-            selectedColor = el.dataset.color;
-            document.querySelectorAll("#order-popup [data-color]").forEach(c => c.classList.remove("ring", "ring-2"));
-            el.classList.add("ring", "ring-2", "ring-violet-600");
-          });
-        });
-      }
-
-      document.getElementById("confirm-order").addEventListener("click", () => {
-        if (!selectedColor) return alert("Choisissez une couleur !");
-        const order = { user: currentUser.username, vehicle: selectedVehicle.model, color: selectedColor, price: selectedVehicle.price, date: new Date().toLocaleString() };
-        let orders = JSON.parse(localStorage.getItem("orders")) || [];
-        orders.push(order);
-        localStorage.setItem("orders", JSON.stringify(orders));
-        popup.classList.add("hidden");
-        alert("Commande envoyée !");
+    filterBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach(b => b.classList.remove("bg-violet-600", "text-white"));
+        btn.classList.add("bg-violet-600", "text-white");
+        currentFilter = btn.dataset.category;
+        renderList();
       });
+    });
 
-      filterBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          filterBtns.forEach(b => b.classList.remove("bg-violet-600", "text-white"));
-          btn.classList.add("bg-violet-600", "text-white");
-          currentFilter = btn.dataset.category;
-          renderList();
-        });
-      });
+    sortSelect.addEventListener("change", renderList);
 
-      sortSelect.addEventListener("change", renderList);
-
-      renderAuth();
-      renderList();
-    </script>
-  </body>
+    renderList();
+    lucide.createIcons();
+  </script>
+</body>
 </html>
-
 
